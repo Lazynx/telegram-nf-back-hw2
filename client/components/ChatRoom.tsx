@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useRef } from 'react';
 import { useChat } from '@/context/ChatContext';
 import axios from 'axios';

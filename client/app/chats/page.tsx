@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ChatList from '@/components/ChatList';
 import ChatRoom from '@/components/ChatRoom';
 import { ChatProvider } from '@/context/ChatContext';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 const App: React.FC = () => {
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
@@ -13,7 +14,8 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <ChatProvider>
+    <ProtectedRoute>
+        <ChatProvider>
       <div className="flex h-screen overflow-hidden">
         <div className="w-1/4 bg-gray-100 dark:bg-gray-800 p-4 overflow-y-auto">
           <ChatList onSelectChat={setSelectedChatId} />
@@ -22,7 +24,8 @@ const App: React.FC = () => {
           {selectedChatId && <ChatRoom chatId={selectedChatId} />}
         </div>
       </div>
-    </ChatProvider>
+    </ChatProvider>    
+    </ProtectedRoute>
   );
 };
 

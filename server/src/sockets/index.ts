@@ -11,7 +11,6 @@ export default function (httpServer: HTTPServer) {
   io.on('connection', (socket) => {
     console.log('a user connected');
 
-    // Handle join room event
     socket.on('join_room', (roomId) => {
       socket.join(roomId);
       console.log(`user joined room ${roomId}`);
@@ -20,7 +19,7 @@ export default function (httpServer: HTTPServer) {
     // Handle send message event
     socket.on('send_message', ({ roomId, text, sender }) => {
       const message = {
-        _id: new Date().getTime().toString(), // Mock ID, replace with actual ID from DB if needed
+        _id: new Date().getTime().toString(), 
         text,
         sender,
         chat: roomId,

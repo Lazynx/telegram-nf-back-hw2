@@ -11,6 +11,7 @@ chatRouter.post('/chats', chatController.createChat);
 chatRouter.post('/messages', chatController.addMessage);
 chatRouter.post('/participants', chatController.addParticipant);
 chatRouter.get('/chats', chatController.getChats); 
+chatRouter.put('/chats/:chatId/addParticipant', chatController.addParticipantToChat);
 chatRouter.get('/chats/:chatId', chatController.getChatById); 
 chatRouter.get('/chats/:chatId/messages', chatController.getAllMessages); 
 

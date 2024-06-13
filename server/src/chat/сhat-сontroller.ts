@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import Chat from './models/Chat';
 import { ChatService } from './сhat-service';
 
 export class ChatController {
@@ -10,7 +11,7 @@ export class ChatController {
       const chat = await this.chatService.createChat(participants);
       res.json(chat);
     } catch (error) {
-      res.status(500).send('Server Error');
+      res.status(500).send(error);
     }
   };
 
@@ -32,7 +33,7 @@ export class ChatController {
       const participant = await this.chatService.addParticipant(username, conversations);
       res.json(participant);
     } catch (error) {
-      res.status(500).send('Server Error');
+      res.status(500).send(error);
     }
   };
 
@@ -41,7 +42,7 @@ export class ChatController {
       const chats = await this.chatService.getChats();
       res.json(chats);
     } catch (error) {
-      res.status(500).send('Server Error');
+      res.status(500).send(error);
     }
   };
 
@@ -55,7 +56,7 @@ export class ChatController {
         res.status(404).send('Chat not found');
       }
     } catch (error) {
-      res.status(500).send('Server Error');
+      res.status(500).send(error);
     }
   };
 
@@ -65,9 +66,22 @@ export class ChatController {
       const messages = await this.chatService.getAllMessages(chatId);
       res.json(messages);
     } catch (error) {
-      res.status(500).send('Server Error');
+      res.status(500).send(error);
     }
   };
+
+  public addParticipantToChat = async (req: Request, res: Response): Promise<void> => {
+    const { chatId } = req.params;
+    const { userId } = req.body;
+
+    try {
+      const chat = await this.chatService.addParticipantToChat(chatId, userId);
+
+      res.status(200).json(chat);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  }
 }
 
 export default ChatController;

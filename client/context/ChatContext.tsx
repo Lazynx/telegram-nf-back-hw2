@@ -41,13 +41,15 @@ export const ChatProvider: React.FC = ({ children }) => {
     const chatId = localStorage.getItem('chatId');
     const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
 
-    if (!chatId || !storedUser) return;
+    if (!storedUser) return;
 
     setUser(storedUser);
 
-    socketRef.current = io('http://localhost:8000', {});
+    if (chatId) {
+      joinRoom(chatId);
+    }
 
-    socketRef.current.emit('join_room', chatId);
+    socketRef.current = io('http://localhost:8000', {});
 
     socketRef.current.on('receive_message', (data: Message) => {
       setMessages((prevMessages) => [...prevMessages, data]);
@@ -64,6 +66,23 @@ export const ChatProvider: React.FC = ({ children }) => {
       setUser(storedUser);
     }
   }, [user]);
+
+  const joinRoom = async (chatId: string) => {
+    if (socketRef.current) {
+      socketRef.current.emit('join_room', chatId);
+      localStorage.setItem('chatId', chatId);
+
+      if (user) {
+        try {
+          await axios.put(`http://localhost:8000/api/chats/${chatId}/addParticipant`, {
+            userId: user._id,
+          });
+        } catch (error) {
+          console.error('Error adding participant:', error);
+        }
+      }
+    }
+  };
 
   const sendMessage = async (message: string) => {
     if (socketRef.current && message.trim() !== '' && user) {
@@ -94,6 +113,8 @@ export const ChatProvider: React.FC = ({ children }) => {
           chat: chatId,
         }),
       });
+
+      setMessages((prevMessages) => [...prevMessages, messageData]);
     }
   };
 

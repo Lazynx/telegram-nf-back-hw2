@@ -21,6 +21,13 @@ class AuthService {
     });
     return response.data;
   }
+
+  logout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('chatId');
+  }
 }
 
 export default new AuthService();
